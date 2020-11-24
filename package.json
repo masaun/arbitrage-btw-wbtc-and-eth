@@ -1,0 +1,30 @@
+{
+  "name": "arbitrage-btw-eth-and-wbtc",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test:local": "truffle test ./test/test-local/* --network local",
+    "compile:local": "truffle compile --reset --network local",
+    "migrate:local": "truffle migrate --reset --network local",
+    "console:ropsten": "truffle console --network ropsten",
+    "compile:ropsten": "truffle compile --reset --network ropsten",
+    "migrate:ropsten": "truffle migrate --reset --network ropsten",
+    "test:ropsten": "truffle test ./test/test-ropsten/* --network ropsten",
+    "script:arbitrage": "node ./scripts/scripts-ropsten/ArbitrageurBtwSogurAndUniswap.script.js --network ropsten",
+    "test:ropsten": "truffle test ./test/test-ropsten/* --network ropsten",
+    "start-blank": "rm -rf client/src && cp -rf barebones/src client/"
+  },
+  "author": "masaun",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
+    "@truffle/hdwallet-provider": "^1.2.0",
+    "dotenv": "^8.2.0",
+    "eth-block-tracker": "^4.4.3",
+    "ethereumjs-tx": "^2.1.2"
+  },
+  "devDependencies": {}
+}
