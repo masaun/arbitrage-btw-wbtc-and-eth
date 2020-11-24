@@ -13,7 +13,7 @@ contract ArbitrageurBtwETHAndWBTC {
     uint public currentArbitrageId;
 
     /// Mapping for saving bought amount and sold amount
-    mapping (uint => mapping (address => uint)) ethAmountWhenBuyWBTC;   /// Key: arbitrageId -> userAddress -> ETH amount that was transferred for buying WBTCToken
+    mapping (uint => mapping (address => uint)) ethAmountWhenborrowWBTC;   /// Key: arbitrageId -> userAddress -> ETH amount that was transferred for buying WBTCToken
     mapping (uint => mapping (address => uint)) wbtcAmountWhenSellWBTC;  /// Key: arbitrageId -> userAddress -> WBTC amount that was transferred for selling WBTCToken
 
     ArbitrageHelper immutable arbitrageHelper;
@@ -40,7 +40,7 @@ contract ArbitrageurBtwETHAndWBTC {
         currentArbitrageId++;
 
         /// Buy WBTC tokens on the WBTC contract and Swap WBTC tokens for ETH on the Uniswap
-        buyWBTC(newArbitrageId);
+        borrowWBTC(newArbitrageId);
         swapWBTCForETH(userAddress, WBTCAmount);
     }
 
@@ -63,14 +63,14 @@ contract ArbitrageurBtwETHAndWBTC {
     ///------------------------------------------------------------
 
     /***
-     * @notice - Buying WBTC from Sögur's smart contract (by sending ETH to it)
+     * @notice - Borrowing WBTC from Sögur's smart contract (by sending ETH to it)
      **/
-    function buyWBTC(uint arbitrageId) public payable returns (bool) {
+    function borrowWBTC(uint arbitrageId) public payable returns (bool) {
         /// At the 1st, ETH should be transferred from a user's wallet to this contract.
 
         /// At the 2rd, operations below are executed.
         WBTCToken.exchange();  /// Exchange ETH for WBTC.
-        ethAmountWhenBuyWBTC[arbitrageId][msg.sender] = msg.value;  /// [Note]: Save the ETH amount that was transferred for buying WBTCToken 
+        ethAmountWhenborrowWBTC[arbitrageId][msg.sender] = msg.value;  /// [Note]: Save the ETH amount that was transferred for buying WBTCToken 
     }
 
     /***
