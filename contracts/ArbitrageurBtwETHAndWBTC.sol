@@ -158,10 +158,10 @@ contract ArbitrageurBtwETHAndWBTC {
      **/
     function swapWBTCForETH(address payable userAddress, uint WBTCAmount) public returns (bool) {
         /// Transfer WBTC tokens from this contract to the arbitrageHelper contract 
-        //WBTCToken.transfer(ARBITRAGE_HELPER, WBTCAmount);
+        WBTC.transfer(ARBITRAGE_HELPER, WBTCAmount);
 
         /// Execute swap
-        //arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
+        arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
     }
     
     /***
