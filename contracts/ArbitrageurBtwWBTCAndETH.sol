@@ -16,7 +16,7 @@ import { IComptroller } from "./compound/interfaces/IComptroller.sol";
 /***
  * @notice - This contract that new version of ArbitrageurBtwSogurAndUniswap.sol
  **/
-contract ArbitrageurBtwETHAndWBTC {
+contract ArbitrageurBtwWBTCAndETH {
 
     /// Arbitrage ID
     uint8 public currentArbitrageId;
