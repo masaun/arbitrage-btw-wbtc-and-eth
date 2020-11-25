@@ -9,6 +9,7 @@ import { ArbitrageHelper } from './ArbitrageHelper.sol';
 import { ICErc20 } from "./compound/interfaces/ICErc20.sol";
 import { ICEther } from "./compound/interfaces/ICEther.sol";
 import { ICToken } from "./compound/interfaces/ICToken.sol";
+import { IPriceFeed } from "./compound/interfaces/IPriceFeed.sol";
 import { IComptroller } from "./compound/interfaces/IComptroller.sol";
 
 
@@ -20,14 +21,12 @@ contract ArbitrageurBtwETHAndWBTC {
     /// Arbitrage ID
     uint8 public currentArbitrageId;
 
-    /// Mapping for saving bought amount and sold amount
-    mapping (uint => mapping (address => uint)) ethAmountWhenborrowWBTC;   /// Key: arbitrageId -> userAddress -> ETH amount that was transferred for buying WBTCToken
-    mapping (uint => mapping (address => uint)) wbtcAmountWhenSellWBTC;  /// Key: arbitrageId -> userAddress -> WBTC amount that was transferred for selling WBTCToken
-
     ArbitrageHelper immutable arbitrageHelper;
     IERC20 immutable WBTC;
 
     address payable ARBITRAGE_HELPER;
+
+    event MyLog(string, uint256);
 
     constructor(address payable _arbitrageHelper, address _wbtc) public {
         arbitrageHelper = ArbitrageHelper(_arbitrageHelper);
@@ -48,16 +47,17 @@ contract ArbitrageurBtwETHAndWBTC {
         address payable userAddress, 
         uint WBTCAmount,
         address payable _cEther,
+        address _cToken,
         address _comptroller,
-        //address _priceFeed,
-        address _cToken
+        address _priceFeed,
+        uint _underlyingDecimals
     ) public returns (bool) {
         /// Publish new arbitrage ID
         uint8 newArbitrageId = getNextArbitrageId();
         currentArbitrageId++;
 
         /// Borrow WBTC by using ETH as collateral. After that, Swap WBTC tokens for ETH on the Uniswap
-        borrowWBTC(newArbitrageId, _cEther, _comptroller, _cToken);
+        borrowWBTC(newArbitrageId, _cEther, _cToken, _comptroller, _priceFeed, _underlyingDecimals);
         swapWBTCForETH(userAddress, WBTCAmount);
     }
 
@@ -85,20 +85,21 @@ contract ArbitrageurBtwETHAndWBTC {
     function borrowWBTC(
         uint arbitrageId, 
         address payable _cEther,
+        address _cToken,
         address _comptroller,
-        //address _priceFeed,
-        address _cToken
-    ) public payable returns (bool) {
+        address _priceFeed,
+        uint _underlyingDecimals
+    ) public payable returns (uint _borrows) {
         /// At the 1st, ETH should be transferred from a user's wallet to this contract.
         ICEther cEth = ICEther(_cEther);
-        IComptroller comptroller = IComptroller(_comptroller);
-        //IPriceFeed priceFeed = PriceFeed(_priceFeed);
         ICErc20 cToken = ICErc20(_cToken);
+        IComptroller comptroller = IComptroller(_comptroller);
+        IPriceFeed priceFeed = IPriceFeed(_priceFeed);
 
-        // Supply ETH as collateral, get cETH in return
+        /// Supply ETH as collateral, get cETH in return
         cEth.mint.value(msg.value)();
 
-        // Enter the ETH market so you can borrow another type of asset
+        /// Enter the ETH market so you can borrow another type of asset
         address[] memory cTokens = new address[](1);
         cTokens[0] = _cEther;
         uint256[] memory errors = comptroller.enterMarkets(cTokens);
@@ -106,6 +107,19 @@ contract ArbitrageurBtwETHAndWBTC {
             revert("Comptroller.enterMarkets failed.");
         }
 
+        /// Borrow WBTC (by using ETH as collateral)
+        uint borrows = _borrowWBTC(cEth, cToken, comptroller, priceFeed, _underlyingDecimals);
+
+        return borrows;
+    }
+
+    function _borrowWBTC(
+        ICEther cEth,
+        ICErc20 cToken,
+        IComptroller comptroller,
+        IPriceFeed priceFeed,
+        uint _underlyingDecimals
+    ) internal returns (uint _borrows) {
         // Get my account's total liquidity value in Compound
         (uint256 error, uint256 liquidity, uint256 shortfall) = comptroller
             .getAccountLiquidity(address(this));
@@ -115,11 +129,28 @@ contract ArbitrageurBtwETHAndWBTC {
         require(shortfall == 0, "account underwater");
         require(liquidity > 0, "account has excess collateral");
 
+        // Get the underlying price in USD from the Price Feed,
+        // so we can find out the maximum amount of underlying we can borrow.
+        uint256 underlyingPrice = priceFeed.getUnderlyingPrice(address(cToken));
+        uint256 maxBorrowUnderlying = liquidity / underlyingPrice;
 
-        /// At the 2rd, operations below are executed.
-        //WBTCToken.exchange();  /// Exchange ETH for WBTC.
-        ethAmountWhenborrowWBTC[arbitrageId][msg.sender] = msg.value;  /// [Note]: Save the ETH amount that was transferred for buying WBTCToken 
+        // Borrowing near the max amount will result
+        // in your account being liquidated instantly
+        emit MyLog("Maximum underlying Borrow (borrow far less!)", maxBorrowUnderlying);
+
+        // Borrow underlying
+        uint256 numUnderlyingToBorrow = 10;
+
+        // Borrow, check the underlying balance for this contract's address
+        cToken.borrow(numUnderlyingToBorrow * 10**_underlyingDecimals);
+
+        // Get the borrow balance
+        uint256 borrows = cToken.borrowBalanceCurrent(address(this));
+        emit MyLog("Current underlying borrow amount", borrows);
+
+        return borrows;
     }
+    
 
     /***
      * @notice - Swap the received WBTC back to ETH on Uniswap
@@ -156,7 +187,6 @@ contract ArbitrageurBtwETHAndWBTC {
 
         /// At the 2rd, operation below is executed
         WBTC.transferFrom(msg.sender, address(this), WBTCAmount); /// [Note]: WBTC exchanged with ETH via transferFrom() method
-        wbtcAmountWhenSellWBTC[arbitrageId][msg.sender] = WBTCAmount;   /// [Note]: Save the WBTC amount that was transferred for selling WBTCToken
     }
 
     /***
@@ -183,11 +213,11 @@ contract ArbitrageurBtwETHAndWBTC {
     ///------------------------------------------------------------
 
     function getETHAmountWhenborrowWBTC(uint arbitrageId, address userAddress) public view returns (uint _ethAmountWhenborrowWBTC) {
-        return ethAmountWhenborrowWBTC[arbitrageId][userAddress];
+        //return ethAmountWhenborrowWBTC[arbitrageId][userAddress];
     }    
 
     function getWBTCAmountWhenSellWBTC(uint arbitrageId, address userAddress) public view returns (uint _wbtcAmountWhenSellWBTC) {
-        return wbtcAmountWhenSellWBTC[arbitrageId][userAddress];
+        //return wbtcAmountWhenSellWBTC[arbitrageId][userAddress];
     }
 
 
