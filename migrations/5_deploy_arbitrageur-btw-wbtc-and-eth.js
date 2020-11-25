@@ -10,5 +10,5 @@ const _arbitrageHelper = ArbitrageHelper.address;
 const _wbtc = tokenAddressList["Ropsten"]["WBTC"];
 
 module.exports = function(deployer) {
-    deployer.deploy(ArbitrageurBtwWBTCAndETH, _arbitrageHelper);
+    deployer.deploy(ArbitrageurBtwWBTCAndETH, _arbitrageHelper, _wbtc);
 };
