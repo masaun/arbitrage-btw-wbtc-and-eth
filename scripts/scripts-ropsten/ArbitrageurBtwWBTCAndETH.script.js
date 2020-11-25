@@ -26,9 +26,31 @@ arbitrageurBtwWBTCAndETH = new web3.eth.Contract(arbitrageurBtwWBTCAndETHABI, ar
  * @notice - Execute all methods
  **/
 async function main() {
-    await executeArbitrageByBuying();
+    await borrowWBTC();                /// [Result]: Success
+    await executeArbitrageByBuying();  /// [Result]: Fail
 }
 main();
+
+
+/*** 
+ * @dev - Send borrowWBTC()
+ **/
+async function borrowWBTC() {
+    const arbitrageId = 1;
+    const _cEther = tokenAddressList["Ropsten"]["cEther"];  /// cEther on Ropsten
+    const _cToken = tokenAddressList["Ropsten"]["cWBTC"];   /// cWBTC on Ropsten
+    const _comptroller = contractAddressList["Ropsten"]["Compound"]["Comptroller"];
+    const _priceFeed = contractAddressList["Ropsten"]["Compound"]["PriceFeed"];
+    const _underlyingDecimals = 18;
+
+    let inputData1 = await arbitrageurBtwWBTCAndETH.methods.borrowWBTC(arbitrageId,
+                                                                       _cEther,
+                                                                       _cToken,
+                                                                       _comptroller,
+                                                                       _priceFeed,
+                                                                       _underlyingDecimals).encodeABI();
+    let transaction1 = await sendTransaction(walletAddress1, privateKey1, arbitrageurBtwWBTCAndETHAddr, inputData1);
+}
 
 
 /*** 
