@@ -138,11 +138,12 @@ contract ArbitrageurBtwETHAndWBTC {
         // in your account being liquidated instantly
         emit MyLog("Maximum underlying Borrow (borrow far less!)", maxBorrowUnderlying);
 
-        // Borrow underlying
-        uint256 numUnderlyingToBorrow = 10;
+        // Borrow underlying (e.g. 10 below is an example of borrow amount)
+        uint256 numUnderlyingToBorrow = 1;
 
         // Borrow, check the underlying balance for this contract's address
-        cToken.borrow(numUnderlyingToBorrow * 10**_underlyingDecimals);
+        cToken.borrow(numUnderlyingToBorrow * 10**16);                     /// 0.01 WBTC
+        //cToken.borrow(numUnderlyingToBorrow * 10**_underlyingDecimals);  /// 1 WBTC
 
         // Get the borrow balance
         uint256 borrows = cToken.borrowBalanceCurrent(address(this));
