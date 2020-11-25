@@ -10,5 +10,5 @@ const _uniswapV2Router02 = contractAddressList["Ropsten"]["Uniswap"]["UniswapV2R
 const _wbtc = tokenAddressList["Ropsten"]["WBTC"];
 
 module.exports = async function (deployer) {
-    deployer.deploy(FlashSwapHelper, _uniswapV2Factory, _uniswapV2Router02, _wbtc);
+    deployer.deploy(ArbitrageHelper, _uniswapV2Factory, _uniswapV2Router02, _wbtc);
 };
