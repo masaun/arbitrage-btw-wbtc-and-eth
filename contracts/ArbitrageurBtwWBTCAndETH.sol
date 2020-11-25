@@ -16,7 +16,7 @@ import { IComptroller } from "./compound/interfaces/IComptroller.sol";
 /***
  * @notice - This contract that new version of ArbitrageurBtwSogurAndUniswap.sol
  **/
-contract ArbitrageurBtwETHAndWBTC {
+contract ArbitrageurBtwWBTCAndETH {
 
     /// Arbitrage ID
     uint8 public currentArbitrageId;
@@ -138,11 +138,12 @@ contract ArbitrageurBtwETHAndWBTC {
         // in your account being liquidated instantly
         emit MyLog("Maximum underlying Borrow (borrow far less!)", maxBorrowUnderlying);
 
-        // Borrow underlying
-        uint256 numUnderlyingToBorrow = 10;
+        // Borrow underlying (e.g. 10 below is an example of borrow amount)
+        uint256 numUnderlyingToBorrow = 1;
 
         // Borrow, check the underlying balance for this contract's address
-        cToken.borrow(numUnderlyingToBorrow * 10**_underlyingDecimals);
+        cToken.borrow(numUnderlyingToBorrow * 10**16);                     /// 0.01 WBTC
+        //cToken.borrow(numUnderlyingToBorrow * 10**_underlyingDecimals);  /// 1 WBTC
 
         // Get the borrow balance
         uint256 borrows = cToken.borrowBalanceCurrent(address(this));
@@ -157,10 +158,10 @@ contract ArbitrageurBtwETHAndWBTC {
      **/
     function swapWBTCForETH(address payable userAddress, uint WBTCAmount) public returns (bool) {
         /// Transfer WBTC tokens from this contract to the arbitrageHelper contract 
-        //WBTCToken.transfer(ARBITRAGE_HELPER, WBTCAmount);
+        WBTC.transfer(ARBITRAGE_HELPER, WBTCAmount);
 
         /// Execute swap
-        //arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
+        arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
     }
     
     /***

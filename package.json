@@ -13,7 +13,7 @@
     "compile:ropsten": "truffle compile --reset --network ropsten",
     "migrate:ropsten": "truffle migrate --reset --network ropsten",
     "test:ropsten": "truffle test ./test/test-ropsten/* --network ropsten",
-    "script:arbitrage": "node ./scripts/scripts-ropsten/ArbitrageurBtwSogurAndUniswap.script.js --network ropsten",
+    "script:arbitrage": "node ./scripts/scripts-ropsten/ArbitrageurBtwWBTCAndETH.script.js --network ropsten",
     "start-blank": "rm -rf client/src && cp -rf barebones/src client/"
   },
   "author": "masaun",
