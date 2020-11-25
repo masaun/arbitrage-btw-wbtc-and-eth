@@ -27,18 +27,18 @@ contract ArbitrageHelper {
     /***
      * @notice - Transfer ETH that includes profit amount and initial amount into a user.
      **/
-    function transferETHIncludeProfitAmountAndInitialAmounToUser(address payable userAddress) public returns (bool) {
-        uint ETHBalanceOfContract = address(this).balance;
-        userAddress.transfer(ETHBalanceOfContract);  /// Transfer ETH from this contract to userAddress's wallet
-    }
+    // function transferETHIncludeProfitAmountAndInitialAmounToUser(address payable userAddress) public returns (bool) {
+    //     uint ETHBalanceOfContract = address(this).balance;
+    //     userAddress.transfer(ETHBalanceOfContract);  /// Transfer ETH from this contract to userAddress's wallet
+    // }
 
     /***
      * @notice - Transfer WBTC tokens that includes profit amount and initial amount into a user.
      **/
-    function transferWBTCIncludeProfitAmountAndInitialAmounToUser(address userAddress) public returns (bool) {
-        uint WBTCBalanceOfContract = WBTCToken.balanceOf(address(this));
-        WBTCToken.transfer(userAddress, WBTCBalanceOfContract);  /// Transfer WBTC from this contract to userAddress's wallet        
-    }
+    // function transferWBTCIncludeProfitAmountAndInitialAmounToUser(address userAddress) public returns (bool) {
+    //     uint WBTCBalanceOfContract = WBTCToken.balanceOf(address(this));
+    //     WBTCToken.transfer(userAddress, WBTCBalanceOfContract);  /// Transfer WBTC from this contract to userAddress's wallet        
+    // }
 
 
 

@@ -14,6 +14,7 @@ interface IComptroller {
 
     function enterMarkets(address[] calldata cTokens) external returns (uint256[] memory);
     function exitMarket(address cToken) external returns (uint256);
+    function getAccountLiquidity(address) external view returns (uint256, uint256, uint256);
 
     /*** Policy Hooks ***/
 
