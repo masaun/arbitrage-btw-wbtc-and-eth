@@ -91,7 +91,7 @@ async function sendTransaction(walletAddress, privateKey, contractAddress, input
             nonce:    web3.utils.toHex(txCount),
             from:     walletAddress,
             to:       contractAddress,  /// Contract address which will be executed
-            value:    web3.utils.toHex(web3.utils.toWei('0.05', 'ether')),  /// [Note]: 0.05 ETH as a msg.value
+            value:    web3.utils.toHex(web3.utils.toWei('0.01', 'ether')),  /// [Note]: 0.01 ETH as a msg.value
             gasLimit: web3.utils.toHex(2100000),
             gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'gwei')),   /// [Note]: Gas Price is 100 Gwei 
             data: inputData  
