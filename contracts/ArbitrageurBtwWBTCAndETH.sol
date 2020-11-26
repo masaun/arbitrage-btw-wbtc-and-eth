@@ -26,7 +26,7 @@ contract ArbitrageurBtwWBTCAndETH {
 
     address payable ARBITRAGE_HELPER;
 
-    event MyLog(string, uint256);
+    event ProcessLog(string, uint256);
 
     constructor(address payable _arbitrageHelper, address _wbtc) public {
         arbitrageHelper = ArbitrageHelper(_arbitrageHelper);
@@ -132,7 +132,7 @@ contract ArbitrageurBtwWBTCAndETH {
 
         // Borrowing near the max amount will result
         // in your account being liquidated instantly
-        emit MyLog("Maximum underlying Borrow (borrow far less!)", maxBorrowUnderlying);
+        emit ProcessLog("Maximum underlying Borrow (borrow far less!)", maxBorrowUnderlying);
 
         // Borrow underlying (e.g. 10 below is an example of borrow amount)
         uint256 numUnderlyingToBorrow = 1;
@@ -143,7 +143,7 @@ contract ArbitrageurBtwWBTCAndETH {
 
         // Get the borrow balance
         uint256 borrows = cToken.borrowBalanceCurrent(address(this));
-        emit MyLog("Current underlying borrow amount", borrows);
+        emit ProcessLog("Current underlying borrow amount", borrows);
 
         return borrows;
     }
@@ -164,7 +164,9 @@ contract ArbitrageurBtwWBTCAndETH {
     /***
      * @notice - Borrowing WBTC from Sögur's smart contract (by sending ETH to it)
      **/
-    function repayWBTC(uint arbitrageId) public payable returns (bool) {}
+    function repayWBTC(uint arbitrageId) public payable returns (bool) {
+        /// [Todo]: Write code for repay.
+    }
 
 
     /***

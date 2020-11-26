@@ -1,4 +1,4 @@
-# Arbitrage between ETH and WBTC
+# Arbitrage between WBTC and ETH
 
 ***
 ## 【Introduction of Arbitrage between WBTC and ETH】
