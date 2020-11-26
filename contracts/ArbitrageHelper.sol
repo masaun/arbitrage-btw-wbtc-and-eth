@@ -20,16 +20,14 @@ contract ArbitrageHelper {
     IWETH immutable WETH;
     IERC20 immutable WBTC;
 
-    address payable ARBITRAGEUR_BTW_WBTC_AND_ETH;
     address immutable WBTC_ADDRESS;
 
-    constructor(address _uniswapV2Factory, address _uniswapV2Router02, address payable _arbitrageurBtwWBTCAndETH, address _wbtc) public {
+    constructor(address _uniswapV2Factory, address _uniswapV2Router02, address _wbtc) public {
         uniswapV2Factory = IUniswapV2Factory(_uniswapV2Factory);
         uniswapV2Router02 = IUniswapV2Router02(_uniswapV2Router02);
         WETH = IWETH(uniswapV2Router02.WETH());
         WBTC = IERC20(_wbtc);
 
-        ARBITRAGEUR_BTW_WBTC_AND_ETH = _arbitrageurBtwWBTCAndETH;
         WBTC_ADDRESS = _wbtc;
     }
 
@@ -55,9 +53,6 @@ contract ArbitrageHelper {
 
         /// Swap ETH for WBTC on Balancer
         swapETHForWBTCOnBalancer(); 
-
-        /// Transfer swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
-        transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract();
     }
   
     function getEstimatedWBTCForETH(uint ETHAmount) public view returns (uint[] memory) {
@@ -94,7 +89,8 @@ contract ArbitrageHelper {
     /***
      * @notice - Transfer swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
      **/
-    function transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract() public returns (bool) {
+    function transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract(address _arbitrageurBtwWBTCAndETH) public returns (bool) {
+        address ARBITRAGEUR_BTW_WBTC_AND_ETH = _arbitrageurBtwWBTCAndETH;
         uint WBTCBalanceOfContract = WBTC.balanceOf(address(this));
         WBTC.transfer(ARBITRAGEUR_BTW_WBTC_AND_ETH, WBTCBalanceOfContract);
     }

@@ -60,6 +60,9 @@ contract ArbitrageurBtwWBTCAndETH {
         borrowWBTC(newArbitrageId, _cEther, _cToken, _comptroller, _priceFeed, _underlyingDecimals);
         swapWBTCForETH(userAddress, WBTCAmount);
 
+        /// Transferred swapped WBTC amount from the ArbitrageHelper contract to the ArbitrageurBtwWBTCAndETH contract.
+        arbitrageHelper.transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract(address(this));
+
         /// Repay borrowed WBTC amount
         repayWBTC(newArbitrageId);
 
