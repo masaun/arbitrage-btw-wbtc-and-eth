@@ -53,6 +53,9 @@ contract ArbitrageHelper {
 
         /// Refund leftover WBTC amount to user
 
+        /// Swap ETH for WBTC on Balancer
+        swapETHForWBTCOnBalancer(); 
+
         /// Transfer swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
         transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract();
     }
@@ -78,7 +81,14 @@ contract ArbitrageHelper {
 
 
     ///------------------------------------------------------------
-    /// Parts of workflow of arbitrage (2nd part)
+    /// Swap ETH for WBTC on Balancer
+    ///------------------------------------------------------------
+
+    function swapETHForWBTCOnBalancer() public payable returns (bool) {}
+
+
+    ///------------------------------------------------------------
+    /// Back to 
     ///------------------------------------------------------------
 
     /***
