@@ -41,7 +41,7 @@ contract ArbitrageurBtwWBTCAndETH {
     ///------------------------------------------------------------
 
     /***
-     * @notice - Executor of flash swap for arbitrage profit (1: by using the flow of buying)
+     * @notice - Executor method for arbitrage (WBTC - ETH)
      **/
     function executeArbitrage(
         address payable userAddress, 
