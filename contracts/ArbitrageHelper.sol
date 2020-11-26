@@ -83,7 +83,7 @@ contract ArbitrageHelper {
 
 
     ///------------------------------------------------------------
-    /// Back to 
+    /// Back to swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
     ///------------------------------------------------------------
 
     /***
