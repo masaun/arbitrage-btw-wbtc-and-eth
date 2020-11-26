@@ -43,7 +43,7 @@ contract ArbitrageurBtwWBTCAndETH {
     /***
      * @notice - Executor of flash swap for arbitrage profit (1: by using the flow of buying)
      **/
-    function executeArbitrageByBuying(
+    function executeArbitrage(
         address payable userAddress, 
         uint WBTCAmount,
         address payable _cEther,
