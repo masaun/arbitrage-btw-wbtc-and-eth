@@ -1,9 +1,8 @@
 # Arbitrage between ETH and WBTC
 
 ***
-## 【Introduction of Arbitrage between ETH and WBTC】
-- This is a solidity smart contract that allows a user to ...
-
+## 【Introduction of Arbitrage between WBTC and ETH】
+- This is a solidity smart contract that allows a user to get a opportunity to execute automatic arbitrage between WBTC and ETH.
 
 &nbsp;
 
@@ -17,24 +16,16 @@ $ npm install
 
 <br>
 
-### ② Run ganache-cli
-（Please make sure whether port number is `8545` or not）
+### ② Compile & migrate contracts (on Ropsten testnet)
 ```
-$ ganache-cli
-```
-
-<br>
-
-### ③ Compile & migrate contracts
-```
-$ npm run migrate:local
+$ npm run migrate:ropsten
 ```
 
 <br>
 
-### ④ Test contracts（※ In progress to implement）
+### ③ Execute script (it's instead of testing)
 ```
-$ npm run test:local
+$ npm run script:arbitrage
 ```
 
 
