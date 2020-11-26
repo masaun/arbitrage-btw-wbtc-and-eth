@@ -59,6 +59,13 @@ contract ArbitrageurBtwWBTCAndETH {
         /// Borrow WBTC by using ETH as collateral. After that, Swap WBTC tokens for ETH on the Uniswap
         borrowWBTC(newArbitrageId, _cEther, _cToken, _comptroller, _priceFeed, _underlyingDecimals);
         swapWBTCForETH(userAddress, WBTCAmount);
+
+        /// Repay borrowed WBTC amount
+        repayWBTC(newArbitrageId);
+
+        /// Transfer original ETH amount and remained WBTC amount (that is profit amount) into a user.
+        transferRemainedWBTCAmountIntoUser(userAddress);
+        transferOriginalETHAmountAndIntoUser(userAddress);
     }
 
 
@@ -137,7 +144,7 @@ contract ArbitrageurBtwWBTCAndETH {
 
         return borrows;
     }
-    
+
 
     /***
      * @notice - Swap the received WBTC back to ETH on Uniswap
@@ -149,6 +156,7 @@ contract ArbitrageurBtwWBTCAndETH {
         /// Execute swap
         arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
     }
+
     
     /***
      * @notice - Borrowing WBTC from Sögur's smart contract (by sending ETH to it)
@@ -156,6 +164,21 @@ contract ArbitrageurBtwWBTCAndETH {
     function repayWBTC(uint arbitrageId) public payable returns (bool) {}
 
 
+    /***
+     * @notice - Transfer remained WBTC amount (that is profit amount) into a user.
+     **/
+    function transferRemainedWBTCAmountIntoUser(address userAddress) public returns (bool) {
+        uint WBTCBalanceOfContract = WBTC.balanceOf(address(this));
+        WBTC.transfer(userAddress, WBTCBalanceOfContract);
+    }
+
+    /***
+     * @notice - Transfer original ETH amount and remained WBTC amount (that is profit amount) into a user.
+     **/
+    function transferOriginalETHAmountAndIntoUser(address payable userAddress) public returns (bool) {
+        uint ETHBalanceOfContract = address(this).balance;
+        userAddress.transfer(ETHBalanceOfContract);
+    }
 
 
 
