@@ -1,13 +1,13 @@
 pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
-import './uniswapV2/uniswap-v2-periphery/libraries/UniswapV2Library.sol';
+import { UniswapV2Library } from './uniswapV2/uniswap-v2-periphery/libraries/UniswapV2Library.sol';
 
-import './uniswapV2/uniswap-v2-core/interfaces/IUniswapV2Factory.sol';
-import './uniswapV2/uniswap-v2-core/interfaces/IUniswapV2Pair.sol';
-import './uniswapV2/uniswap-v2-periphery/interfaces/IUniswapV2Router02.sol';
-import './uniswapV2/uniswap-v2-periphery/interfaces/IERC20.sol';
-import './uniswapV2/uniswap-v2-periphery/interfaces/IWETH.sol';
+import { IUniswapV2Factory } from './uniswapV2/uniswap-v2-core/interfaces/IUniswapV2Factory.sol';
+import { IUniswapV2Pair } from './uniswapV2/uniswap-v2-core/interfaces/IUniswapV2Pair.sol';
+import { IUniswapV2Router02 } from './uniswapV2/uniswap-v2-periphery/interfaces/IUniswapV2Router02.sol';
+import { IERC20 } from './uniswapV2/uniswap-v2-periphery/interfaces/IERC20.sol';
+import { IWETH } from './uniswapV2/uniswap-v2-periphery/interfaces/IWETH.sol';
 
 
 /***
@@ -20,14 +20,16 @@ contract ArbitrageHelper {
     IWETH immutable WETH;
     IERC20 immutable WBTC;
 
+    address payable ARBITRAGEUR_BTW_WBTC_AND_ETH;
     address immutable WBTC_ADDRESS;
 
-    constructor(address _uniswapV2Factory, address _uniswapV2Router02, address _wbtc) public {
+    constructor(address _uniswapV2Factory, address _uniswapV2Router02, address payable _arbitrageurBtwWBTCAndETH, address _wbtc) public {
         uniswapV2Factory = IUniswapV2Factory(_uniswapV2Factory);
         uniswapV2Router02 = IUniswapV2Router02(_uniswapV2Router02);
         WETH = IWETH(uniswapV2Router02.WETH());
         WBTC = IERC20(_wbtc);
 
+        ARBITRAGEUR_BTW_WBTC_AND_ETH = _arbitrageurBtwWBTCAndETH;
         WBTC_ADDRESS = _wbtc;
     }
 
@@ -49,9 +51,10 @@ contract ArbitrageHelper {
         uint amountOutMin = ETHAmountMin;  /// [Todo]: Retrieve a minimum amount of ETH
         uniswapV2Router02.swapExactTokensForETH(amountIn, amountOutMin, getPathForWBTCToETH(), address(this), deadline);
 
-        /// refund leftover WBTCToken to user
-        // (bool success,) = msg.sender.call{ value: address(this).balance }("");
-        // require(success, "refund failed");
+        /// Refund leftover WBTC amount to user
+
+        /// Transfer swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
+        transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract();
     }
   
     function getEstimatedWBTCForETH(uint ETHAmount) public view returns (uint[] memory) {
@@ -79,20 +82,12 @@ contract ArbitrageHelper {
     ///------------------------------------------------------------
 
     /***
-     * @notice - Transfer ETH that includes profit amount and initial amount into a user.
+     * @notice - Transfer swapped WBTC amount into the ArbitrageurBtwWBTCAndETH contract.
      **/
-    // function transferETHIncludeProfitAmountAndInitialAmounToUser(address payable userAddress) public returns (bool) {
-    //     uint ETHBalanceOfContract = address(this).balance;
-    //     userAddress.transfer(ETHBalanceOfContract);  /// Transfer ETH from this contract to userAddress's wallet
-    // }
-
-    /***
-     * @notice - Transfer WBTC tokens that includes profit amount and initial amount into a user.
-     **/
-    // function transferWBTCIncludeProfitAmountAndInitialAmounToUser(address userAddress) public returns (bool) {
-    //     uint WBTCBalanceOfContract = WBTCToken.balanceOf(address(this));
-    //     WBTCToken.transfer(userAddress, WBTCBalanceOfContract);  /// Transfer WBTC from this contract to userAddress's wallet        
-    // }
+    function transferSwappedWBTCIntoArbitrageurBtwWBTCAndETHContract() public returns (bool) {
+        uint WBTCBalanceOfContract = WBTC.balanceOf(address(this));
+        WBTC.transfer(ARBITRAGEUR_BTW_WBTC_AND_ETH, WBTCBalanceOfContract);
+    }
 
 
 
