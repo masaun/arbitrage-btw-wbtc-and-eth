@@ -41,9 +41,9 @@ contract ArbitrageurBtwWBTCAndETH {
     ///------------------------------------------------------------
 
     /***
-     * @notice - Executor of flash swap for arbitrage profit (1: by using the flow of buying)
+     * @notice - Executor method for arbitrage (WBTC - ETH)
      **/
-    function executeArbitrageByBuying(
+    function executeArbitrage(
         address payable userAddress, 
         uint WBTCAmount,
         address payable _cEther,
@@ -59,19 +59,13 @@ contract ArbitrageurBtwWBTCAndETH {
         /// Borrow WBTC by using ETH as collateral. After that, Swap WBTC tokens for ETH on the Uniswap
         borrowWBTC(newArbitrageId, _cEther, _cToken, _comptroller, _priceFeed, _underlyingDecimals);
         swapWBTCForETH(userAddress, WBTCAmount);
-    }
 
-    /***
-     * @notice - Executor of flash swap for arbitrage profit (2: by using the flow of selling)
-     **/
-    function executeArbitrageBySelling(address payable userAddress, uint WBTCAmount) public returns (bool) {
-        /// Publish new arbitrage ID
-        uint8 newArbitrageId = getNextArbitrageId();
-        currentArbitrageId++;
+        /// Repay borrowed WBTC amount
+        repayWBTC(newArbitrageId);
 
-        /// Sell WBTC tokens on the WBTC contract and Swap ETH for WBTC tokens on the Uniswap
-        sellWBTC(newArbitrageId, WBTCAmount);
-        swapETHForWBTC(userAddress, WBTCAmount);
+        /// Transfer original ETH amount and remained WBTC amount (that is profit amount) into a user.
+        transferRemainedWBTCAmountIntoUser(userAddress);
+        transferOriginalETHAmountAndIntoUser(userAddress);
     }
 
 
@@ -121,8 +115,7 @@ contract ArbitrageurBtwWBTCAndETH {
         uint _underlyingDecimals
     ) internal returns (uint _borrows) {
         // Get my account's total liquidity value in Compound
-        (uint256 error, uint256 liquidity, uint256 shortfall) = comptroller
-            .getAccountLiquidity(address(this));
+        (uint256 error, uint256 liquidity, uint256 shortfall) = comptroller.getAccountLiquidity(address(this));
         if (error != 0) {
             revert("Comptroller.getAccountLiquidity failed.");
         }
@@ -151,7 +144,7 @@ contract ArbitrageurBtwWBTCAndETH {
 
         return borrows;
     }
-    
+
 
     /***
      * @notice - Swap the received WBTC back to ETH on Uniswap
@@ -163,6 +156,7 @@ contract ArbitrageurBtwWBTCAndETH {
         /// Execute swap
         arbitrageHelper.swapWBTCForETH(userAddress, WBTCAmount);
     }
+
     
     /***
      * @notice - Borrowing WBTC from Sögur's smart contract (by sending ETH to it)
@@ -170,36 +164,23 @@ contract ArbitrageurBtwWBTCAndETH {
     function repayWBTC(uint arbitrageId) public payable returns (bool) {}
 
 
-
-
-
-
-
-
-
-    ///---------------------------------------------------------------------------///
-
     /***
-     * @notice - Selling WBTC for ETH from Sögur's smart contract
-     * @dev - Only specified the contract address of WBTCToken.sol as a "to" address in transferFrom() method of WBTCToken.sol
+     * @notice - Transfer remained WBTC amount (that is profit amount) into a user.
      **/
-    function sellWBTC(uint arbitrageId, uint WBTCAmount) public returns (bool) {
-        /// At the 1st, WBTC tokens should be transferred from a user's wallet to this contract by using transfer() method. 
-
-        /// At the 2rd, operation below is executed
-        WBTC.transferFrom(msg.sender, address(this), WBTCAmount); /// [Note]: WBTC exchanged with ETH via transferFrom() method
+    function transferRemainedWBTCAmountIntoUser(address userAddress) public returns (bool) {
+        uint WBTCBalanceOfContract = WBTC.balanceOf(address(this));
+        WBTC.transfer(userAddress, WBTCBalanceOfContract);
     }
 
     /***
-     * @notice - Swap the received ETH back to WBTC on Uniswap (ETH - WBTC)
-     **/    
-    function swapETHForWBTC(address userAddress, uint WBTCAmount) public payable returns (bool) {
-        /// Transfer ETH from this contract to the arbitrageHelper contract 
-        //ARBITRAGE_HELPER.transfer(msg.value);
-
-        /// Execute swap
-        //arbitrageHelper.swapETHForWBTC(userAddress, WBTCAmount);
+     * @notice - Transfer original ETH amount and remained WBTC amount (that is profit amount) into a user.
+     **/
+    function transferOriginalETHAmountAndIntoUser(address payable userAddress) public returns (bool) {
+        uint ETHBalanceOfContract = address(this).balance;
+        userAddress.transfer(ETHBalanceOfContract);
     }
+
+
 
 
 

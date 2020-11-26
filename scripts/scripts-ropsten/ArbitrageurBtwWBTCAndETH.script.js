@@ -26,9 +26,31 @@ arbitrageurBtwWBTCAndETH = new web3.eth.Contract(arbitrageurBtwWBTCAndETHABI, ar
  * @notice - Execute all methods
  **/
 async function main() {
-    await executeArbitrageByBuying();
+    await borrowWBTC();                /// [Result]: Success
+    await executeArbitrageByBuying();  /// [Result]: Fail
 }
 main();
+
+
+/*** 
+ * @dev - Send borrowWBTC()
+ **/
+async function borrowWBTC() {
+    const arbitrageId = 1;
+    const _cEther = tokenAddressList["Ropsten"]["cEther"];  /// cEther on Ropsten
+    const _cToken = tokenAddressList["Ropsten"]["cWBTC"];   /// cWBTC on Ropsten
+    const _comptroller = contractAddressList["Ropsten"]["Compound"]["Comptroller"];
+    const _priceFeed = contractAddressList["Ropsten"]["Compound"]["PriceFeed"];
+    const _underlyingDecimals = 18;
+
+    let inputData1 = await arbitrageurBtwWBTCAndETH.methods.borrowWBTC(arbitrageId,
+                                                                       _cEther,
+                                                                       _cToken,
+                                                                       _comptroller,
+                                                                       _priceFeed,
+                                                                       _underlyingDecimals).encodeABI();
+    let transaction1 = await sendTransaction(walletAddress1, privateKey1, arbitrageurBtwWBTCAndETHAddr, inputData1);
+}
 
 
 /*** 
@@ -69,7 +91,7 @@ async function sendTransaction(walletAddress, privateKey, contractAddress, input
             nonce:    web3.utils.toHex(txCount),
             from:     walletAddress,
             to:       contractAddress,  /// Contract address which will be executed
-            value:    web3.utils.toHex(web3.utils.toWei('0.05', 'ether')),  /// [Note]: 0.05 ETH as a msg.value
+            value:    web3.utils.toHex(web3.utils.toWei('0.01', 'ether')),  /// [Note]: 0.01 ETH as a msg.value
             gasLimit: web3.utils.toHex(2100000),
             gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'gwei')),   /// [Note]: Gas Price is 100 Gwei 
             data: inputData  
