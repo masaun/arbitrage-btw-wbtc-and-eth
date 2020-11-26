@@ -65,13 +65,13 @@ async function executeArbitrageByBuying() {
     const _priceFeed = contractAddressList["Ropsten"]["Compound"]["PriceFeed"];
     const _underlyingDecimals = 18;
 
-    let inputData1 = await arbitrageurBtwWBTCAndETH.methods.executeArbitrageByBuying(userAddress,
-                                                                                     WBTCAmount,
-                                                                                     _cEther,
-                                                                                     _cToken,
-                                                                                     _comptroller,
-                                                                                     _priceFeed,
-                                                                                     _underlyingDecimals).encodeABI();
+    let inputData1 = await arbitrageurBtwWBTCAndETH.methods.executeArbitrage(userAddress,
+                                                                             WBTCAmount,
+                                                                             _cEther,
+                                                                             _cToken,
+                                                                             _comptroller,
+                                                                             _priceFeed,
+                                                                             _underlyingDecimals).encodeABI();
     let transaction1 = await sendTransaction(walletAddress1, privateKey1, arbitrageurBtwWBTCAndETHAddr, inputData1);
 }
 
