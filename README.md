@@ -1,6 +1,4 @@
 # Arbitrage between WBTC and ETH
-
-***
 ## 【Introduction of Arbitrage between WBTC and ETH】
 - This is a solidity smart contract that allows a user to get a opportunity to execute automatic arbitrage between WBTC and ETH.
 
@@ -45,17 +43,15 @@ $ npm run script:arbitrage
 ***
 
 ## 【References】
-- Compound  
+- [Compound]:   
   - Deployed contract address (on Mainnet and Ropsten)    
     - Doc：https://compound.finance/docs#networks  
     - Github（Full）：https://github.com/compound-finance/compound-config/tree/master/networks  
 
-<br>
-
   - compound-borrow-examples  
     https://github.com/compound-developers/compound-borrow-examples/blob/master/solidity-examples/MyContracts.sol  
 
-  - Borrowing an ERC20 Token Using ETH as Collateral  
+  - Borrowing an ERC20 Token by using ETH as Collateral  
     https://medium.com/compound-finance/borrowing-assets-from-compound-quick-start-guide-f5e69af4b8f4   
 
   - [Workshop]：Lending & Borrowing Tokens on Compound from Solidity  
@@ -63,7 +59,7 @@ $ npm run script:arbitrage
 
 <br>
 
-- Uniswap 
+- [Uniswap]:   
   - Flash Swap  
     https://uniswap.org/docs/v2/core-concepts/flash-swaps/  
 
@@ -78,7 +74,7 @@ $ npm run script:arbitrage
 
 <br>
 
-- Balancer
+- [Balancer]:  
   - Doc  
     - interface   
       https://docs.balancer.finance/smart-contracts/interfaces  
