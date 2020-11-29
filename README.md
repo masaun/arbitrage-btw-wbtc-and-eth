@@ -75,14 +75,12 @@ $ npm run script:arbitrage
 <br>
 
 - [Balancer]:  
+  - Deployed addresses on Kovan  
+    https://docs.balancer.finance/smart-contracts/addresses#kovan 
+
   - Doc  
     - interface   
       https://docs.balancer.finance/smart-contracts/interfaces  
 
     - on-chain registry (add pool pair)  
       https://docs.balancer.finance/smart-contracts/on-chain-registry#addpoolpair  
-
-<br>
-
-  - Deployed addresses on Kovan  
-    https://docs.balancer.finance/smart-contracts/addresses#kovan  
