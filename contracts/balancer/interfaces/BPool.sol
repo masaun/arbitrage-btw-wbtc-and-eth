@@ -87,7 +87,7 @@ interface BPool {
         uint tokenBalanceOut,
         uint tokenWeightOut,
         uint swapFee
-    ) public pure returns (uint spotPrice);
+    ) external pure returns (uint spotPrice);
 
     function calcOutGivenIn(
         uint tokenBalanceIn,
@@ -96,7 +96,7 @@ interface BPool {
         uint tokenWeightOut,
         uint tokenAmountIn,
         uint swapFee
-    ) public pure returns (uint tokenAmountOut);
+    ) external pure returns (uint tokenAmountOut);
 
     function calcInGivenOut(
         uint tokenBalanceIn,
@@ -105,7 +105,7 @@ interface BPool {
         uint tokenWeightOut,
         uint tokenAmountOut,
         uint swapFee
-    ) public pure returns (uint tokenAmountIn);
+    ) external pure returns (uint tokenAmountIn);
 
     function calcPoolOutGivenSingleIn(
         uint tokenBalanceIn,
@@ -114,7 +114,7 @@ interface BPool {
         uint totalWeight,
         uint tokenAmountIn,
         uint swapFee
-    ) public pure returns (uint poolAmountOut);
+    ) external pure returns (uint poolAmountOut);
 
     function calcSingleInGivenPoolOut(
         uint tokenBalanceIn,
@@ -123,7 +123,7 @@ interface BPool {
         uint totalWeight,
         uint poolAmountOut,
         uint swapFee
-    ) public pure returns (uint tokenAmountIn);
+    ) external pure returns (uint tokenAmountIn);
 
     function calcSingleOutGivenPoolIn(
         uint tokenBalanceOut,
@@ -132,7 +132,7 @@ interface BPool {
         uint totalWeight,
         uint poolAmountIn,
         uint swapFee
-    ) public pure returns (uint tokenAmountOut);
+    ) external pure returns (uint tokenAmountOut);
 
     function calcPoolInGivenSingleOut(
         uint tokenBalanceOut,
@@ -141,6 +141,6 @@ interface BPool {
         uint totalWeight,
         uint tokenAmountOut,
         uint swapFee
-    ) public pure returns (uint poolAmountIn);
+    ) external pure returns (uint poolAmountIn);
 
 }
