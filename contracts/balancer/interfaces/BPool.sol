@@ -21,7 +21,7 @@ interface BPool {
     function setPublicSwap(bool public_) external;
     function finalize() external;
     function bind(address token, uint balance, uint denorm) external;
-    function rebind(address token, uint balance, uint denorm) public;
+    function rebind(address token, uint balance, uint denorm) external;
     function unbind(address token) external;
     function gulp(address token) external;
 
