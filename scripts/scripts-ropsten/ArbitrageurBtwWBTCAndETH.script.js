@@ -27,7 +27,7 @@ arbitrageurBtwWBTCAndETH = new web3.eth.Contract(arbitrageurBtwWBTCAndETHABI, ar
  **/
 async function main() {
     await borrowWBTC();                /// [Result]: Success
-    await executeArbitrageByBuying();  /// [Result]: Fail
+    await executeArbitrageByBuying();  /// [Result]: Fail (In progress)
 }
 main();
 

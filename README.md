@@ -8,6 +8,13 @@
 
 ***
 
+## 【Diagram of workflow】
+![【Diagram】Arbitrageur btw WBTC and ETH (1)](https://user-images.githubusercontent.com/19357502/100541630-8bf59280-3288-11eb-9d17-8cda5b5d96e9.jpg)
+
+&nbsp;
+
+***
+
 ## Setup
 ### ① Install modules
 ```
@@ -27,7 +34,6 @@ $ npm run migrate:ropsten
 ```
 $ npm run script:arbitrage
 ```
-
 
 &nbsp;
 
