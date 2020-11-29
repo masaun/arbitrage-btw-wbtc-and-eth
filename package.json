@@ -1,5 +1,5 @@
 {
-  "name": "arbitrage-btw-eth-and-wbtc",
+  "name": "arbitrage-btw-wbtc-and-eth",
   "version": "1.0.0",
   "description": "",
   "directories": {
@@ -9,11 +9,11 @@
     "test:local": "truffle test ./test/test-local/* --network local",
     "compile:local": "truffle compile --reset --network local",
     "migrate:local": "truffle migrate --reset --network local",
-    "console:ropsten": "truffle console --network ropsten",
-    "compile:ropsten": "truffle compile --reset --network ropsten",
-    "migrate:ropsten": "truffle migrate --reset --network ropsten",
-    "test:ropsten": "truffle test ./test/test-ropsten/* --network ropsten",
-    "script:arbitrage": "node ./scripts/scripts-ropsten/ArbitrageurBtwWBTCAndETH.script.js --network ropsten",
+    "console:kovan": "truffle console --network kovan",
+    "compile:kovan": "truffle compile --reset --network kovan",
+    "migrate:kovan": "truffle migrate --reset --network kovan",
+    "test:kovan": "truffle test ./test/test-kovan/* --network kovan",
+    "script:arbitrage": "node ./scripts/scripts-kovan/ArbitrageurBtwWBTCAndETH.script.js --network kovan",
     "start-blank": "rm -rf client/src && cp -rf barebones/src client/"
   },
   "author": "masaun",
