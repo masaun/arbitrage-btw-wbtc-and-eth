@@ -42,6 +42,13 @@ $ npm run script:arbitrage
 
 ***
 
+## 【Remarks】
+- In advance (and in case of using kovan), you need to add a pair (WBTC - ETH) liquidity into uniswap pool and balancer pool.  
+
+&nbsp;
+
+***
+
 ## 【References】
 - [Compound]:   
   - Deployed contract address (on Mainnet and Ropsten)    
